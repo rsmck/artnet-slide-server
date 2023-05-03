@@ -1,6 +1,6 @@
 {
     "name": "artnet-slide-server",
-    "version": "0.1",
+    "version": "1.0.0",
     "author": "Ross Henderson-McKillop",
     "description": "Simple static slide Art-Net media server suited to the Raspberry Pi",
     "url": "https://github.com/rsmck/artnet-slide-server",
@@ -19,7 +19,7 @@
         "slide server",
         "projection",
         "scenic",
-        "dmx",
+        "dmx"
     ],
     "dependencies": {
       "express": "^4.18.2",
