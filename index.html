@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>ArtnetSlideServer</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        var curr = {};
+        curr.img = '';
+        curr.alpha = 0;
+
+        // preload images
+        for (let i = 0; i < 25; i++) {
+            let img = new Image();
+            if (i < 10) { n = '0'+i } else { n = i; }
+            img.src = '/images/image_'+n+'.png';
+        }
+
+        var mediaImg = document.getElementById("media");
+
+        socket.on("update_0", function(data) {
+            console.log(data);
+            if (data.i != undefined) {
+                if (curr.img != data.i) {
+                    document.getElementById("media").style.backgroundImage = 'url(/images/'+data.i+')';
+                }
+                curr.img = data.i;
+            }
+            if (data.a != undefined) {
+                if (curr.alpha != data.a) {
+                    document.getElementById("media").style.opacity = data.a;
+                }
+                curr.alpha = parseFloat(data.a);
+            }
+            if (data.cmd != undefined) {
+                if (data.cmd == "reload") {
+                    window.location = window.location.href.split('?')[0]+'?its='+Math.floor(Date.now);
+                }
+            }
+            console.log(curr);
+        });
+    </script>
+    <style>
+        body { background-color: #000; }
+        #media {
+          position: fixed;
+          top: 0;
+          left: 0;
+          background-position: center;
+          background-size: cover;
+          background-image: url("/images/image_00.png");
+          height: 100%;
+          width: 100%;
+          transition: opacity 0.05s linear; /* used for basic smoothing */
+        }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+<div id="media"></div>
+<div class="hidden"><img id="buf" src="#"></div>
+</body>
+</html>
