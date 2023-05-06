@@ -18,7 +18,9 @@ Start from source with `node media_server.js`, by default it will listen on Art-
 
 Access the `http://localhost:7600` service from any web browser (ideally a full-screen kiosk browser)
 
-At present this verison uses three channels (a future version will add some effects in other channels) as follows;
+There are two versions in this repository, `media_server.js` is a simple three channel version that uses simple HTML/CSS, `media_server_extended.js` is a new (early alpha) version that uses 20 channels and provides keystoning and some image manipulation.
+
+At present this simple version uses three channels as follows;
 
 | Channel | Description | DMX Values | Feature |
 | ----------- | ----------- | ----------- | ----------- |
@@ -36,5 +38,37 @@ At present this verison uses three channels (a future version will add some effe
 ||| 244-254 | image_25.png |
 | 3 | Control Channel | 126-128 | Reload the Web Browser |
 
+The extended version uses the following channels;
 
-
+| Channel | Description | DMX Values | Feature |
+| ----------- | ----------- | ----------- | ----------- |
+| 1 | Intensity Dimmer (0-100%) | 0-255 | Intensity from 0-100% |
+| 2 | Image Selection | 0-255 | As Above |
+| 3 | Vibrance | 0-5 | No Effect |
+||| 6-126 | -1 to 0 |
+||| 127 | No Effect |
+||| 128-255 | 0 to +1 |
+| 4 | Contrast | 0-5 | No Effect |
+||| 6-126 | -1 to 0 |
+||| 127 | No Effect |
+||| 128-255 | 0 to +1 |
+| 5 | Hue | 0-5 | No Effect (0) |
+||| 6-126 | -180 to 0 |
+||| 127 | No Effect (0) |
+||| 128-255 | 0 to +180 |
+| 6 | Saturation | 0-5 | No Effect (0) |
+||| 6-126 | Desaturate -1 to 0 |
+||| 127 | No Effect (0) |
+||| 128-255 | Increase Saturation 0 to 1 |
+| 7 | Sepia Filter | 0-255 | Sepia Filter 0-100% |
+| 10 | Blur (Normal) | 0-255 | Blur |
+| 11 | Blur (Lens Effect) | 0-255 | Lens Blur |
+| 12 | Keystone Adjustment | 0-255 | Top Left Horizontal Offset (0-960px) |
+| 13 | Keystone Adjustment | 0-255 | Top Right Horizontal Offset (0-960px) |
+| 14 | Keystone Adjustment | 0-255 | Bottom Left Horizontal Offset (0-960px) |
+| 15 | Keystone Adjustment | 0-255 | Bottom Right Horizontal Offset (0-960px) |
+| 16 | Keystone Adjustment | 0-255 | Top Left Vertical Offset (0-540px) |
+| 17 | Keystone Adjustment | 0-255 | Top Right Vertical Offset (0-540px) |
+| 18 | Keystone Adjustment | 0-255 | Bottom Left Vertical Offset (0-540px) |
+| 19 | Keystone Adjustment | 0-255 | Bottom Right Vertical Offset (0-540px) |
+| 20 | Control Channel | 126-128 | Reload the Web Browser |
