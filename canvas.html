@@ -1,0 +1,140 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>ArtnetSlideServer</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/glfx.js"></script>
+    <script>
+        const socket = io();
+
+        var curr = {};
+        curr.img = '';
+        curr.alpha = 0;
+        curr.vib = 0;
+        curr.con = 0;
+        curr.hue = 0;
+        curr.sat = 0;
+        curr.sepia = 0;
+        curr.vig_size = 0;
+        curr.vig_amnt = 0;
+        curr.blur = 0;
+        curr.lensblur = 0; // this supports more options than exposed in this script
+        curr.keystone = [0,0,1920,0,0,1080,1920,1080];     
+        curr.keystone_string = JSON.stringify(curr.keystone); // used for easy comparisons
+
+        var canvas;
+        var texture;
+        var images = [];
+        var textures = [];
+
+        window.onload = function() {
+            console.log("init...");
+            // preload images
+            for (let i = 0; i < 25; i++) {
+                if (i < 10) { n = '0'+i } else { n = ''+i; }
+                images[i] = new Image();
+                images[i].src = '/images/image_'+n+'.png';
+            }
+
+            // images loaded, start init... 
+            var placeholder = document.getElementById('placeholder');
+            try {
+                canvas = fx.canvas();
+            } catch (e) {
+                console.log(e);
+                return;
+            }
+
+            // load the textures
+            for (i in images) {
+                textures[i] = canvas.texture(images[i]);
+            }
+
+            canvas.replace(placeholder);
+
+            // draw the first image
+            texture = textures[1];
+            canvas.draw(textures[1]).update();
+
+            console.log('done');
+        }
+
+        function redraw() {
+            // redraws the canvas with filters applied.
+            canvas.draw(texture);
+            canvas.brightnessContrast(curr.alpha-1, curr.con);
+            if (curr.vib != 0) { canvas.vibrance(curr.vib); }
+            if (curr.hexagonalPixelate > 0) { canvas.hexagonalPixelate(960,540,curr.hexagonalPixelate); }
+            if (curr.hue != 0 || curr.sat != 0) { canvas.hueSaturation(curr.hue, curr.sat); }
+            if (curr.sepia > 0) { canvas.sepia(curr.sepia); }
+            if (curr.vig_amnt > 0) { canvas.vignette(curr.vig_size, curr.vig_amnt); }
+            if (curr.blur > 0) { canvas.triangleBlur(curr.blur); }
+            if (curr.lensblur > 0) { canvas.lensBlur(curr.lensblur,0.7,0.51); }
+            if (curr.keystone_string != '' && curr.keystone_string != '[0,0,1920,0,0,1080,1920,1080]') {
+                canvas.perspective([0,0,1920,0,0,1080,1920,1080], curr.keystone);
+            } else {
+                canvas.perspective([0,0,1920,0,0,1080,1920,1080], [0,0,1920,0,0,1080,1920,1080]);
+            }
+            canvas.update();
+        }
+
+        socket.on("update_0", function(data) {
+            console.log(JSON.stringify(data));
+
+            var boolRedraw = false;
+
+            for (const key in data) {
+                if (data[key] != undefined) {
+                    if (key == 'img') {
+                        data.img = parseInt(data.img);
+                        if (curr.img != data.img) {
+                            curr.img = data.images;
+                            texture = textures[data.img];
+                            boolRedraw = true;
+                        }
+                    } else if (key == 'cmd') {
+                        // continue
+                    } else if (key == 'keystone') {
+                        // this one is special
+                        if (curr.keystone_string != JSON.stringify(data.keystone)) {
+                            curr.keystone = data.keystone;
+                            curr.keystone_string = JSON.stringify(data.keystone);
+                            boolRedraw = true;
+                        }
+                    } else {
+                        if (curr[key] != data[key]) {
+                            curr[key] = data[key];
+                            boolRedraw = true;
+                        }
+                    }
+                }
+            }
+
+            if (data.cmd != undefined) {
+                if (data.cmd == "reload") {
+                    window.location = window.location.href.split('?')[0]+'?its='+Math.floor(Date.now);
+                }
+            }
+
+            if (boolRedraw) redraw();
+
+           // console.log(curr);
+        });
+
+    </script>
+    <style>
+        body { background-color: #000; padding:0; margin: 0; overflow: hidden; display: block; }
+        #container canvas {
+          transition: opacity 0.05s linear; /* used for basic smoothing */
+        }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div class="placeholder">
+        <div id="container">
+            <h3 id="placeholder" style="color: #fff; font-family: sans-serif;">Please Wait...</span>
+        </div>
+    </div>
+</body>
+</html>
