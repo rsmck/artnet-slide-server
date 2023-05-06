@@ -18,7 +18,7 @@ Start from source with `node media_server.js`, by default it will listen on Art-
 
 Access the `http://localhost:7600` service from any web browser (ideally a full-screen kiosk browser)
 
-There are two versions in this repository, `media_server.js` is a simple three channel version that uses simple HTML/CSS, `media_server_extended.js` is a new (early alpha) version that uses 20 channels and provides keystoning and some image manipulation.
+There are two versions in this repository, `media_server.js` is a simple three channel version that uses simple HTML/CSS, `media_server_extended.js` is a new (early alpha) version that uses 20 channels and provides keystoning and some image manipulation using the excellent glfx.js [https://github.com/evanw/glfx.js/] by @evanw
 
 At present this simple version uses three channels as follows;
 
