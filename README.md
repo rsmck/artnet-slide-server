@@ -1,3 +1,4 @@
+
 # artnet-slide-server
 
 NB This is another 'works for my own use, might help someone else' type projects. It is *NOT* intended for use in a show-critical environment and hasn't been extensively tested. 
@@ -25,7 +26,7 @@ At present this simple version uses three channels as follows;
 | Channel | Description | DMX Values | Feature |
 | ----------- | ----------- | ----------- | ----------- |
 | 1 | Intensity Dimmer (0-100%) | 0-255 | Intensity from 0-100% |
-| 2 | Image Selection | 0-255 | 0-4 | OFF |
+| 2 | Image Selection | 0-4 | image_00.png |
 ||| 5-14 | image_01.png |
 ||| 15-14 | image_02.png |
 ||| 20-14 | image_03.png |
